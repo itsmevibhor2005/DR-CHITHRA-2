@@ -1,9 +1,24 @@
 import React from "react";
 import heroBg from "../../assets/bg.jpg";
-import img from "../../assets/chithra.jpg" // Replace with correct relative path to your background image
+import img from "../../assets/chithra.jpg";
 import { motion } from "framer-motion";
 
 const HeroSection = () => {
+  const scrollToContact = () => {
+    const contactSection = document.getElementById("contact");
+    if (contactSection) {
+      const headerOffset = 100;
+      const elementPosition = contactSection.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+    }
+  };
+  
+
   return (
     <section
       className="relative bg-black text-white min-h-screen flex items-center"
@@ -42,14 +57,14 @@ const HeroSection = () => {
             Communications
           </p>
 
-          <motion.a
-            href="#contact"
+          <motion.button
+            onClick={scrollToContact}
             className="inline-block bg-yellow-400 text-black font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-yellow-500 transition"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             Get in Touch
-          </motion.a>
+          </motion.button>
         </motion.div>
 
         {/* Right Content (Image) */}

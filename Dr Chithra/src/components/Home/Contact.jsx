@@ -18,7 +18,7 @@ const Contact = () => {
       visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
     };
   return (
-    <section className="bg-white py-16 px-6">
+    <section id='contact' className="bg-white py-16 px-6">
       <motion.div
         initial="hidden"
         whileInView="visible"

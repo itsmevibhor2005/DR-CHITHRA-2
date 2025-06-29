@@ -6,8 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "prisma generate",
-    "build": "prisma generate && <actual-build-command>"
+    "build": "<your-actual-build-command>"
   },
   "keywords": [],
   "author": "",

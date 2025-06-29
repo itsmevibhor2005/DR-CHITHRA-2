@@ -198,8 +198,6 @@ export const addLecture = asyncHandler(async (req, res) => {
       const { id } = req.params;
       const { name, video } = req.body;
       const pdfFile = req.file;
-        console.log(pdfFile);
-        console.log(req.body);
       // Validate course exists
       const courseRef = db.collection("courses").doc(id);
       const courseDoc = await courseRef.get();

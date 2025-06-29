@@ -46,7 +46,7 @@ app.use("/api/research", researchRoutes);
 
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  
 });
 
 app.use((req, res, next) => {

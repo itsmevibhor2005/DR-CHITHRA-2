@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import { motion, useAnimation } from "framer-motion";
-import { useInView } from "react-intersection-observer";
+import { motion } from "framer-motion";
 import { AnimatePresence } from "framer-motion";
 import axios from "axios";
 
-const CourseDrawer = ({ course, index }) => {
+const CourseDrawer = ({ course, index, setModalVideo }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDrawer = () => setIsOpen(!isOpen);
@@ -80,17 +79,19 @@ const CourseDrawer = ({ course, index }) => {
                       <a
                         href={lecture.pdf}
                         className="text-blue-600 hover:underline"
+                        target="_blank"
+                        rel="noopener noreferrer"
                       >
                         [PDF]
                       </a>
                     )}
                     {lecture.video && (
-                      <a
-                        onClick={() => window.openModal(lecture.video)}
+                      <button
+                        onClick={() => setModalVideo(lecture.video)}
                         className="text-blue-600 hover:underline cursor-pointer"
                       >
                         [Video]
-                      </a>
+                      </button>
                     )}
                   </div>
                 </div>
@@ -140,8 +141,38 @@ const Teaching = () => {
     fetchCourses();
   }, []);
 
-  window.openModal = (videoUrl) => {
-    setModalVideo(videoUrl);
+  const formatYoutubeUrl = (url) => {
+    if (!url) return "";
+
+    // If already an embed URL, return as-is
+    if (url.includes("youtube.com/embed")) {
+      return url;
+    }
+
+    // Convert watch URL to embed URL
+    if (url.includes("youtube.com/watch")) {
+      const videoId = url.split("v=")[1];
+      const ampersandPosition = videoId.indexOf("&");
+      if (ampersandPosition !== -1) {
+        return `https://www.youtube.com/embed/${videoId.substring(
+          0,
+          ampersandPosition
+        )}`;
+      }
+      return `https://www.youtube.com/embed/${videoId}`;
+    }
+
+    // Handle youtu.be short URLs
+    if (url.includes("youtu.be")) {
+      const videoId = url.split("/").pop();
+      return `https://www.youtube.com/embed/${videoId}`;
+    }
+
+    return url;
+  };
+
+  const openModal = (videoUrl) => {
+    setModalVideo(formatYoutubeUrl(videoUrl));
     document.body.style.overflow = "hidden";
   };
 
@@ -189,7 +220,12 @@ const Teaching = () => {
           </motion.h2>
           <div className="mt-12 space-y-4">
             {courses.map((course, index) => (
-              <CourseDrawer key={index} course={course} index={index} />
+              <CourseDrawer
+                key={index}
+                course={course}
+                index={index}
+                setModalVideo={openModal}
+              />
             ))}
           </div>
         </div>
@@ -222,8 +258,10 @@ const Teaching = () => {
               <iframe
                 className="modal-iframe h-[90%] w-[90%] rounded-lg"
                 src={modalVideo}
+                frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
+                title="YouTube video player"
               ></iframe>
             </motion.div>
           </motion.div>
